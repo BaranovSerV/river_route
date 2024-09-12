@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Речной маршрут</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-title">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/avatar_curc.jpeg' %}" alt="Логотип сайта" class="logo">
+                    </a>
+                    <h1 class="waves" data-word="Речной маршрут">Речной маршрут</h1>
+                </div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'forum' %}">Форум</a></li>
+                        <li><a href="{% url 'report' %}">Отчеты</a></li>
+                        <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <div class="phrase">
+            <p id="text1" class="fade-in-text"></p>
+            <p id="text2" class="fade-in-text"></p>
+        </div>
+        <section id="forum-home" class="content">
+            <h2>Обсуждаемые темы форума</h2>
+        </section>
+        <section id="home" class="content">
+            <h2>Организуй свой собственный сплав</h2>
+            <div class="bx-row">
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/avatar.jpeg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-run'></i>
+                    </div>
+                    <div class="poster-text">Маршруты</div>
+                </a>
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/Default_an_image_of_a_bowl_with_porridge_and_berries_on_top_ag_1.jpg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-fork'></i>
+                    </div>
+                    <div class="poster-text">Питание и раскладки</div>
+                </a>
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/camping-equipment-arrayed-neatly-on-shelves-within-a-spacious-warehouse-kayaks-foreground-center-p.jpeg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-archive'></i>
+                    </div>
+                    <div class="poster-text">Снаряжение</div>
+                </a>
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/Default_an_image_of_a_group_of_tourists_against_a_sunset_backg_1.jpg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-group'></i>
+                    </div>
+                    <div class="poster-text">Набор в команду</div>
+                </a>
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/maps-spread-atop-a-worn-wooden-table-compass-slightly-ajar-beside-them-graphite-pencils-pointing-t.jpeg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-map-alt'></i>
+                    </div>
+                    <div class="poster-text">Карты</div>
+                </a>
+                <a href="#" class="poster">
+                    <div class="image-container">
+                        <img src="{% static 'images/Default_a_serene_image_of_a_vintage_firstaid_kit_adorned_with_1.jpg' %}" alt="Poster 6">
+                        <i id="icon" class='bx bx-plus-medical'></i>
+                    </div>
+                    <div class="poster-text">Медицина</div>
+                </a>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <h3>Информация:</h3>
+        <div class="footer-main">
+            <div id="footer-links" class="footer-links-1">
+                <a href="#">О проекте</a>
+                <a href="#">Помощь</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+            <div id="footer-links" class="footer-links-2">
+                <a href="#">Поддержка</a>
+                <a href="#">Реклама и интеграции</а>
+                    <a href="#">Партнерство</a>
+            </div>
+            <div class="subscribe">
+                <span>Контакты:</span>
+                <a href="https://t.me/yourtelegram" class="social-icon telegram-icon">
+                    <i class='bx bxl-telegram'></i>
+                </a>
+                <a href="https://github.com/BaranovSerV" class="social-icon github-icon">
+                    <i class='bx bxl-github'></i>
+                </a>
+            </div>
+        </div>
+        <hr class="footer-line">
+        <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
+    </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Массив с фразами
+            const phrases = [
+                { text: 'Если вы думаете, что приключение опасно, попробуйте рутину. Она смертельна.', author: 'Паоло Коэльо' },
+                { text: 'Хватит думать о ямах на дороге, наслаждайся приключением.', author: 'Фитжугх Муллан' },
+                { text: 'Забирай только воспоминания, оставляй только следы.', author: 'Чиф Сиэтл' },
+                { text: 'Любить жизнь гораздо проще, когда путешествуешь. Там, где никто тебя не знает, все в твоих руках, ты действительно становишься хозяином своей судьбы.', author: 'Ханна Арендт' },
+
+            ];
+
+            // Выбор случайной фразы
+            const randomPhrase = phrases[Math.floor(Math.random() * phrases.length)];
+
+            // Отображение фразы на странице
+            document.getElementById('text1').textContent = `"${randomPhrase.text}"`;
+            document.getElementById('text2').textContent = `- ${randomPhrase.author}`;
+        });
+    </script>
+</body>
+
+</html>

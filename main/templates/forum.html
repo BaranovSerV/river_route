@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Речной маршрут - Форум</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-title">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/avatar_curc.jpeg' %}" alt="Логотип сайта" class="logo">
+                    </a>
+                    <h1>Речной маршрут</h1>
+                </div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'forum' %}">Форум</a></li>
+                        <li><a href="{% url 'report' %}">Отчеты</a></li>
+                        <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <section id="forum" class="content">
+            <div class="forum-header">
+                <h2>Форум</h2>
+                <div class="search-add-container">
+                    <form class="search-form">
+                        <input type="text" id="search-river" name="search-river" placeholder="Введите название темы">
+                        <button type="submit" class="search-button">
+                            <i class='bx bx-search-alt-2'></i>
+                        </button>
+                    </form>
+                    <!-- Кнопка для добавления темы -->
+                    <button id="add_topic" onclick="window.location.href='{% url 'add_topic' %}'" class="add-report-button">
+                        Добавить тему
+                    </button>
+                </div>
+            </div>
+            <div id="reports">
+                <!-- Здесь можно отобразить список тем -->
+                {% for topic in topics %}
+                    <article class="report">
+                        <a href="{% url 'topic_detail' topic.id %}">
+                            <h3>{{ topic.title }}</h3>
+                            <p>{{ topic.content|truncatewords:20 }}</p>
+                            <p><small>Автор: {{ topic.author.username }} | Дата: {{ topic.created_at|date:"d M Y" }}</small></p>
+                        </a>
+                    </article>
+                {% empty %}
+                    <p>Нет доступных тем для обсуждения.</p>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+    <footer>
+        <h3>Информация:</h3>
+        <div class="footer-main">
+            <div id="footer-links" class="footer-links-1">
+                <a href="#">О проекте</a>
+                <a href="#">Помощь</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+            <div id="footer-links" class="footer-links-2">
+                <a href="#">Поддержка</a>
+                <a href="#">Реклама и интеграции</a>
+                <a href="#">Партнерство</a>
+            </div>
+            <div class="subscribe">
+                <span>Контакты:</span>
+                <a href="https://t.me/yourtelegram" class="social-icon telegram-icon">
+                    <i class='bx bxl-telegram'></i>
+                </a>
+                <a href="https://github.com/BaranovSerV" class="social-icon github-icon">
+                    <i class='bx bxl-github'></i>
+                </a>
+            </div>
+        </div>
+        <hr class="footer-line">
+        <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
+    </footer>
+</body>
+
+</html>

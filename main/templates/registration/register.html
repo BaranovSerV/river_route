@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Речной маршрут - Регистрация</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-title">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/avatar_curc.jpeg' %}" alt="Логотип сайта" class="logo">
+                    </a>
+                    <h1>Речной маршрут</h1>
+                </div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'forum' %}">Форум</a></li>
+                        <li><a href="{% url 'report' %}">Отчеты</a></li>
+                        <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                        <li><a href="{% url 'login' %}">Вход</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <section id="register" class="sign">
+            <h2>Регистрация</h2>
+            <form id="registerForm" method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <label for="id_username"  placeholder="username">Имя пользователя:</label>
+                <div class="input-box">
+                    {{ form.username.errors }}
+                    {{ form.username }}
+                    <i id="icon-form" class='bx bxs-user'></i>
+                </div>
+                <label for="id_email">Электронная почта:</label>
+                <div class="input-box">
+                    {{ form.email.errors }}
+                    {{ form.email }}
+                    <i id="icon-form" class='bx bx-at'></i>
+                </div>
+                <label for="id_password">Пароль:</label>
+                <div class="input-box">
+                    {{ form.password.errors }}
+                    {{ form.password }}
+                    <i id="icon-form" class='bx bxs-lock-alt'></i>
+                </div>
+                <label for="id_password2">Повторите пароль:</label>
+                <div class="input-box">
+                    {{ form.password2.errors }}
+                    {{ form.password2 }}
+                    <i id="icon-form" class='bx bxs-lock-alt'></i>
+                </div>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+        </section>
+    </div>
+    <footer>
+        <h3>Информация:</h3>
+        <div class="footer-main">
+            <div id="footer-links" class="footer-links-1">
+                <a href="#">О проекте</a>
+                <a href="#">Помощь</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+            <div id="footer-links" class="footer-links-2">
+                <a href="#">Поддержка</a>
+                <a href="#">Реклама и интеграции</a>
+                <a href="#">Партнерство</a>
+            </div>
+            <div class="subscribe">
+                <span>Контакты:</span>
+                <a href="https://t.me/yourtelegram" class="social-icon telegram-icon">
+                    <i class='bx bxl-telegram'></i>
+                </a>
+                <a href="https://github.com/BaranovSerV" class="social-icon github-icon">
+                    <i class='bx bxl-github'></i>
+                </a>
+            </div>
+        </div>
+        <hr class="footer-line">
+        <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

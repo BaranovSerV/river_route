@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Речной маршрут - Профиль</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-title">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/avatar_curc.jpeg' %}" alt="Логотип сайта" class="logo">
+                    </a>
+                    <h1>Речной маршрут</h1>
+                </div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'forum' %}">Форум</a></li>
+                        <li><a href="{% url 'report' %}">Отчеты</a></li>
+                        <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <section class="profile-information">
+            <h2>Профиль</h2>
+            <div class="information">
+                <div class="profile-picture">
+                    <img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" 
+                         alt="Profile Picture"
+                         id="profile-picture">
+                    <!-- Иконка для изменения фото -->
+                    <i class="bx bx-image-add edit-icon"></i>
+                    <form method="post" enctype="multipart/form-data" id="upload-form">
+                        {% csrf_token %}
+                        <input type="file" id="file-input" name="profile_picture" style="display: none;" onchange="document.getElementById('upload-form').submit();">
+                        <button type="submit" style="display: none;">Обновить фото профиля</button>
+                    </form>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Выйти из аккаунта</button>
+                    </form>
+                </div>
+                <div class="profile-info">
+                    <div class="info">
+                        <div>Имя пользователя:</div>
+                        <div>Почта:</div>
+                    </div>
+                    <div class="info-date">
+                       <div>{{ user.username }}</div>
+                       <div>{{ user.email }}</div> 
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <h3>Информация:</h3>
+        <div class="footer-main">
+            <div id="footer-links" class="footer-links-1">
+                <a href="#">О проекте</a>
+                <a href="#">Помощь</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+            <div id="footer-links" class="footer-links-2">
+                <a href="#">Поддержка</a>
+                <a href="#">Реклама и интеграции</a>
+                <a href="#">Партнерство</a>
+            </div>
+            <div class="subscribe">
+                <span>Контакты:</span>
+                <a href="https://t.me/yourtelegram" class="social-icon telegram-icon">
+                    <i class='bx bxl-telegram'></i>
+                </a>
+                <a href="https://github.com/BaranovSerV" class="social-icon github-icon">
+                    <i class='bx bxl-github'></i>
+                </a>
+            </div>
+        </div>
+        <hr class="footer-line">
+        <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
+    </footer>
+
+    <script>
+        document.getElementById('profile-picture').addEventListener('click', function() {
+            document.getElementById('file-input').click();
+        });
+    </script>
+</body>
+
+</html>
