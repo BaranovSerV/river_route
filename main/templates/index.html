@@ -10,7 +10,6 @@
     <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
-
 <body>
     <div class="wrapper">
         <header>
@@ -21,14 +20,17 @@
                     </a>
                     <h1 class="waves" data-word="Речной маршрут">Речной маршрут</h1>
                 </div>
-                <nav>
-                    <ul class="menu">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <nav class="menu"> <!-- Основное меню для настольных устройств -->
+                    <ul>
                         <li><a href="{% url 'index' %}">Главная</a></li>
                         <li><a href="{% url 'forum' %}">Форум</a></li>
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}
@@ -36,17 +38,28 @@
                 </nav>
             </div>
         </header>
+        <nav class="menu-mobile" id="mainNav">
+            <ul class="menu-mobile-ul">
+                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'forum' %}">Форум</a></li>
+                <li><a href="{% url 'report' %}">Отчеты</a></li>
+                <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Вход</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
         <div class="phrase">
             <p id="text1" class="fade-in-text"></p>
             <p id="text2" class="fade-in-text"></p>
         </div>
-        <section id="forum-home" class="content">
-            <h2>Обсуждаемые темы форума</h2>
-        </section>
         <section id="home" class="content">
             <h2>Организуй свой собственный сплав</h2>
             <div class="bx-row">
-                <a href="#" class="poster">
+                <a href="{% url 'routes' %}" class="poster">
                     <div class="image-container">
                         <img src="{% static 'images/avatar.jpeg' %}" alt="Poster 6">
                         <i id="icon" class='bx bx-run'></i>
@@ -101,8 +114,8 @@
             </div>
             <div id="footer-links" class="footer-links-2">
                 <a href="#">Поддержка</a>
-                <a href="#">Реклама и интеграции</а>
-                    <a href="#">Партнерство</a>
+                <a href="#">Реклама и интеграции</a>
+                <a href="#">Партнерство</a>
             </div>
             <div class="subscribe">
                 <span>Контакты:</span>
@@ -134,6 +147,29 @@
             // Отображение фразы на странице
             document.getElementById('text1').textContent = `"${randomPhrase.text}"`;
             document.getElementById('text2').textContent = `- ${randomPhrase.author}`;
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            const section = document.querySelector('section');
+            const footer = document.querySelector('footer');
+            const menuIcon = document.querySelector('.menu-toggle i');
+
+            // Обработчик клика для показа и скрытия меню
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                footer.classList.toggle('hide');
+                section.classList.toggle('hide');
+
+                // Меняем иконку на bx-x при открытии меню
+                if (mainNav.classList.contains('active')) {
+                    menuIcon.classList.remove('bx-menu');
+                    menuIcon.classList.add('bx-x');
+                } else {
+                    menuIcon.classList.remove('bx-x');
+                    menuIcon.classList.add('bx-menu');
+                }
+            });
         });
     </script>
 </body>

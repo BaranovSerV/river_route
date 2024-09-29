@@ -28,7 +28,7 @@
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}
@@ -40,11 +40,15 @@
             <h2>Профиль</h2>
             <div class="information">
                 <div class="profile-picture">
-                    <img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" 
-                         alt="Profile Picture"
-                         id="profile-picture">
-                    <!-- Иконка для изменения фото -->
-                    <i class="bx bx-image-add edit-icon"></i>
+                    <div class="photo">
+                        <img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" 
+                             alt="Profile Picture"
+                             id="profile-picture">
+                        <!-- Иконка для изменения фото -->
+                        <i class="bx bx-image-add edit-icon" id="edit-icon"></i>
+                    </div>
+                    <div class="names-profile">{{ user.first_name}} {{ user.last_name }}</div>
+
                     <form method="post" enctype="multipart/form-data" id="upload-form">
                         {% csrf_token %}
                         <input type="file" id="file-input" name="profile_picture" style="display: none;" onchange="document.getElementById('upload-form').submit();">
@@ -52,12 +56,12 @@
                     </form>
                     <form method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit">Выйти из аккаунта</button>
+                        <button type="submit">Выйти</button>
                     </form>
                 </div>
                 <div class="profile-info">
                     <div class="info">
-                        <div>Имя пользователя:</div>
+                        <div>Имя:</div>
                         <div>Почта:</div>
                     </div>
                     <div class="info-date">
@@ -98,6 +102,10 @@
     <script>
         document.getElementById('profile-picture').addEventListener('click', function() {
             document.getElementById('file-input').click();
+        });
+        // Обработчик событий для клика по иконке редактирования
+        document.getElementById('edit-icon').addEventListener('click', function() {
+        document.getElementById('file-input').click();
         });
     </script>
 </body>

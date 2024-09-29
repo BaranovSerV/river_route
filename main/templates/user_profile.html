@@ -28,7 +28,7 @@
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username  %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}
@@ -36,44 +36,23 @@
                 </nav>
             </div>
         </header>
-        <section id="forum" class="content">
-            <div class="forum-header">
-                <h2>Форум</h2>
-                <div class="search-add-container">
-                    <form class="search-form">
-                        <input type="text" id="search-river" name="search-river" placeholder="Введите название темы">
-                        <button type="submit" class="search-button">
-                            <i class='bx bx-search-alt-2'></i>
-                        </button>
+        <section class="profile-information">
+            <div class="information">
+                <div class="profile-picture">
+                    <div class="photo">
+                        <img src="{% if user.userprofile.profile_picture %}{{ user.userprofile.profile_picture.url }}{% else %}{% static 'images/default.jpg' %}{% endif %}" 
+                             alt="Profile Picture"
+                             id="profile-picture">
+                        <!-- Иконка для изменения фото -->
+                    </div>
+                    <div class="names-profile">{{ user.first_name}} {{ user.last_name }}</div>
+
+                    <form method="post" enctype="multipart/form-data" id="upload-form">
+                        {% csrf_token %}
+                        <input type="file" id="file-input" name="profile_picture" style="display: none;" onchange="document.getElementById('upload-form').submit();">
+                        <button type="submit" style="display: none;">Обновить фото профиля</button>
                     </form>
                 </div>
-            </div>
-            
-            {% if user.is_authenticated %}
-            <!-- Форма для добавления новой темы -->
-            <div class="add-topic-form">
-                <form method="post" action="{% url 'add_topic' %}">
-                    {% csrf_token %}
-                    <input type="text" name="title" placeholder="Название темы" required>
-                    <textarea name="content" placeholder="Описание темы" required></textarea>
-                    <button type="submit" class="add-topic-button">Добавить тему</button>
-                </form>
-            </div>
-            {% else %}
-            <p>Пожалуйста, <a href="{% url 'login' %}">войдите</a>, чтобы добавить новую тему.</p>
-            {% endif %}
-        
-            <!-- Список отчетов -->
-            <div id="reports">
-                {% for topic in topics %}
-                <article class="report">
-                    <a href="{% url 'topic_detail' topic.id %}">
-                        <h3>{{ topic.title }}</h3>
-                        <p>{{ topic.content|truncatewords:20 }}</p>
-                        <p><small>Автор: {{ topic.author.username }} | Дата: {{ topic.created_at|date:"d M Y" }}</small></p>
-                    </a>
-                </article>
-                {% endfor %}
             </div>
         </section>
     </div>

@@ -21,20 +21,44 @@
                     </a>
                     <h1>Речной маршрут</h1>
                 </div>
-                <nav>
-                    <ul class="menu">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <nav class="menu"> <!-- Основное меню для настольных устройств -->
+                    <ul>
                         <li><a href="{% url 'index' %}">Главная</a></li>
                         <li><a href="{% url 'forum' %}">Форум</a></li>
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
-                        <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% endif %}
                     </ul>
                 </nav>
             </div>
         </header>
+
+        <!-- Полноэкранное мобильное меню -->
+        <nav class="menu-mobile" id="mainNav">
+            <ul class="menu-mobile-ul">
+                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'forum' %}">Форум</a></li>
+                <li><a href="{% url 'report' %}">Отчеты</a></li>
+                <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Вход</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+
+        <!-- Секция входа -->
         <section id="login" class="sign">
             <h2>Вход</h2>
-            <form id="loginForm" method="post"> <!-- Исправлено "metod" на "method" -->
+            <form id="loginForm" method="post">
                 {% csrf_token %}
                 <label for="loginUsername">Имя пользователя:</label>
                 <div class="input-box">
@@ -48,7 +72,9 @@
                 </div>
                 {% if form.errors %}
                 <div class="error-message">
-                    {{ form.errors }}
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
                 </div>
                 {% endif %}
                 <button type="submit">Войти</button>
@@ -56,6 +82,7 @@
             <p>Еще не зарегистрированы? <a href="{% url 'register' %}">Регистрация</a></p>
         </section>
     </div>
+
     <footer>
         <h3>Информация:</h3>
         <div class="footer-main">
@@ -66,7 +93,7 @@
             </div>
             <div id="footer-links" class="footer-links-2">
                 <a href="#">Поддержка</a>
-                <a href="#">Реклама и интеграции</a>
+                <a href="#">Реклама и интеграции</а>
                 <a href="#">Партнерство</a>
             </div>
             <div class="subscribe">
@@ -82,6 +109,33 @@
         <hr class="footer-line">
         <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            const section = document.querySelector('section');
+            const footer = document.querySelector('footer');
+            const menuIcon = document.querySelector('.menu-toggle i');
+
+            // Обработчик клика для показа и скрытия меню
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                footer.classList.toggle('hide');
+                section.classList.toggle('hide');
+
+                // Меняем иконку на bx-x при открытии меню
+                if (mainNav.classList.contains('active')) {
+                    menuIcon.classList.remove('bx-menu');
+                    menuIcon.classList.add('bx-x');
+                } else {
+                    menuIcon.classList.remove('bx-x');
+                    menuIcon.classList.add('bx-menu');
+                }
+            });
+        });
+    </script>
+
 </body>
 
 </html>

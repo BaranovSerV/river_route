@@ -28,7 +28,7 @@
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}

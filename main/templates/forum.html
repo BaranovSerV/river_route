@@ -21,14 +21,17 @@
                     </a>
                     <h1>Речной маршрут</h1>
                 </div>
-                <nav>
-                    <ul class="menu">
+                <button class="menu-toggle" id="menuToggle">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <nav class="menu"> <!-- Основное меню для настольных устройств -->
+                    <ul>
                         <li><a href="{% url 'index' %}">Главная</a></li>
                         <li><a href="{% url 'forum' %}">Форум</a></li>
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}
@@ -36,6 +39,20 @@
                 </nav>
             </div>
         </header>
+
+        <nav class="menu-mobile" id="mainNav">
+            <ul class="menu-mobile-ul">
+                <li><a href="{% url 'index' %}">Главная</a></li>
+                <li><a href="{% url 'forum' %}">Форум</a></li>
+                <li><a href="{% url 'report' %}">Отчеты</a></li>
+                <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Вход</a></li>
+                {% endif %}
+            </ul>
+        </nav>
         <section id="forum" class="content">
             <div class="forum-header">
                 <h2>Форум</h2>
@@ -54,17 +71,22 @@
             </div>
             <div id="reports">
                 <!-- Здесь можно отобразить список тем -->
-                {% for topic in topics %}
-                    <article class="report">
-                        <a href="{% url 'topic_detail' topic.id %}">
-                            <h3>{{ topic.title }}</h3>
-                            <p>{{ topic.content|truncatewords:20 }}</p>
-                            <p><small>Автор: {{ topic.author.username }} | Дата: {{ topic.created_at|date:"d M Y" }}</small></p>
-                        </a>
-                    </article>
-                {% empty %}
-                    <p>Нет доступных тем для обсуждения.</p>
-                {% endfor %}
+            {% for topic in topics %}
+                <article class="report">
+                    <a href="{% url 'topic_detail' topic.id %}">
+                        <h3>{{ topic.title }}</h3>
+                        <p>{{ topic.content|safe }}</p>
+                        <p><small>Автор: <a class="user_profile" href="{% url 'user_profile' topic.author.id %}">{{ topic.author.username }}</a> | {{ topic.created_at|date:"d M Y" }} | <i class='bx bx-show'></i> {{ topic.views }}</small></p>
+                    </a>
+                    {% if user.is_authenticated and user.is_superuser %}
+                        <form action="{% url 'delete_topic' topic.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-button">Удалить</button>
+                        </form>
+                    {% endif %}
+                </article>
+            {% endfor %}
+            
             </div>
         </section>
     </div>
@@ -94,6 +116,31 @@
         <hr class="footer-line">
         <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
     </footer>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const mainNav = document.getElementById('mainNav');
+            const section = document.querySelector('section');
+            const footer = document.querySelector('footer');
+            const menuIcon = document.querySelector('.menu-toggle i');
+
+            // Обработчик клика для показа и скрытия меню
+            menuToggle.addEventListener('click', function() {
+                mainNav.classList.toggle('active');
+                footer.classList.toggle('hide');
+                section.classList.toggle('hide');
+
+                // Меняем иконку на bx-x при открытии меню
+                if (mainNav.classList.contains('active')) {
+                    menuIcon.classList.remove('bx-menu');
+                    menuIcon.classList.add('bx-x');
+                } else {
+                    menuIcon.classList.remove('bx-x');
+                    menuIcon.classList.add('bx-menu');
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

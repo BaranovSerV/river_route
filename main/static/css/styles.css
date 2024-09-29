@@ -133,9 +133,20 @@ h1{
     cursor: pointer;
 }
 
+.photo {
+    position: relative; /* Относительное позиционирование для контейнера с фото */
+}
+
+.photo img {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .edit-icon {
     position: absolute;
-    bottom: 70px; /* Расположить иконку в нижней части изображения */
+    bottom: 10px; /* Расположить иконку в нижней части изображения */
     left: 50%; /* Центрировать по горизонтали */
     transform: translateX(-50%); /* Сдвинуть иконку влево на 50% её ширины для центрирования */
     font-size: 24px; /* Размер иконки */
@@ -147,14 +158,12 @@ h1{
     transition: opacity 0.3s ease; /* Плавный переход */
 }
 
-.profile-picture:hover .edit-icon {
+.photo:hover .edit-icon {
     opacity: 1; /* Показать иконку при наведении */
 }
-
 .profile-info{
     width: 70%;
     font-size: 20px;
-    border: 0.5px solid;
     border-color: #333;
     border-radius: 8px;
     padding: 20px;
@@ -186,10 +195,11 @@ h1{
     gap: 40px;
 }
 
-.profile-picture img{
-    width: 300px;
-    height: 300px;
-    border-radius: 50%;
+.profile-picture .photo img {
+    width: 300px; /* Устанавливает ширину изображения */
+    height: 300px; /* Устанавливает высоту изображения */
+    border-radius: 50%; /* Делаем изображение круглым */
+    object-fit: cover; /* Изображение будет обрезано, но не искажено */
 }
 .date-infomation{
     display: flex;
@@ -227,7 +237,8 @@ form input, form textarea {
     box-sizing: border-box;
 }
 
-form button {
+form button {   
+    display: inline-block; /* Делает кнопку шириной по размеру текста */
     font-size: 16px;
     margin-top: 5px;
     padding: 13px;
@@ -426,6 +437,9 @@ footer p {
     border: 1px solid #ddd;
     border-radius: 5px;
     transition: box-shadow 0.3s;
+    overflow: hidden; /* Скрытие всего, что выходит за границы блока */
+    word-wrap: break-word; /* Перенос слов, которые не умещаются */
+    overflow-wrap: break-word; /* Альтернативное свойство для переноса слов */
 }
 
 .report:hover {
@@ -447,7 +461,7 @@ footer p {
 }
 
 .report a small {
-    color: #888;
+    color:#35424a;
 }
 
 .bx-row {
@@ -605,9 +619,6 @@ footer p {
 }
 
 
-
-
-
 .add-topic-form {
     margin: 20px 0;
     padding: 10px;
@@ -615,8 +626,14 @@ footer p {
     border-radius: 5px;
 }
 
+.menu-toggle{
+    display: none;
+}
 
 @media (max-width: 720px) {
+    .menu-toggle{
+        display: block;
+    }
     .menu{
         display: none;
     }
@@ -634,11 +651,180 @@ footer p {
     }
     .poster{
         width: 100%;
-        gap: 70px;
+        margin-top: 30px;
     }
     #footer-links{
-        display: flex;
-        flex-direction: row;
+        align-items: center;
+        justify-content: center;
         gap: 20px;
+        text-align: center;
+        width: 100%;
+    }
+    .phrase{
+        margin: 20px;
+    }
+
+    footer h3{
+        width: 100%;
+        margin: 20px 0 20px 0;
+        text-align: center;
+    }
+
+    .subscribe{
+        margin-top: 20px;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .waves{
+        font-size: 25px;
+    }
+
+    .content{
+        margin: 0;
+        padding: 10px;
+        width: auto;   
+    }
+
+    .sign, .profile-information{
+        margin: 20px 10px 80px 10px;
+    }
+
+    .logo-title h1{
+        font-size: 25px;
+    }
+
+    .information{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .profile-picture, .profile-info{
+        width: 100%;
     }
   }
+
+
+.delete-button {
+    background-color:#35424a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color:#455a64;
+}
+
+.user_profile{
+    font-size: 14px;
+}
+.user_profile:hover{
+    color: #455a64 ;
+}
+
+.names-profile{
+    margin: 20px;
+    font-size: 25px;
+}
+
+.nav-avatar {
+    width: 30px; /* Ширина аватарки */
+    height: 30px; /* Высота аватарки */
+    border-radius: 50%; /* Закругленные края */
+    object-fit: cover; /* Сохранение пропорций изображения */
+    vertical-align: middle; /* Выравнивание по центру по вертикали */
+}
+
+#map {
+    width: 60%;
+    height: 1000px; /* Укажите высоту для отображения карты */
+    border-radius: 8px;
+    margin-left: 10px;
+}
+
+.maps-content{
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    flex: 1;
+}
+
+#maps-section{
+    width: 40%;
+    margin: 10px;
+}
+
+#track-post{
+
+    margin: 20px;
+    margin-left: -10px;
+}
+
+
+.track-name{
+    color:#35424a;
+    font-size: 25px;
+}
+
+.menu-mobile {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.3) url('{% static "images/avatar.jpeg" %}') no-repeat center center; /* Добавляем фото на задний фон */
+    background-size: cover; /* Масштабирование фото по всему экрану */
+    color: white;
+    display: none;
+}
+
+.menu-mobile.active {
+    display: block; /* Показываем меню */
+}
+
+.menu-mobile-ul {
+    list-style-type: none;
+    padding: 100px 20px; /* Добавляем отступ сверху для красоты */
+    margin: 0;
+    text-align: center;
+}
+
+.menu-mobile-ul li {
+    margin: 20px 0;
+}
+
+.menu-mobile-ul li a {
+    color:#35424a; /* Белый цвет ссылок */
+    text-decoration: none;
+    font-size: 25px;
+}
+
+section.hide, footer.hide {
+    display: none;
+}
+
+.menu-mobile-ul li a:hover {
+    color: #ddd; /* Изменяем цвет при наведении */
+}
+
+/* Скрываем весь контент, кроме меню, когда оно активно */
+
+/* Стили для кнопки мобильного меню */
+.menu-toggle {
+    font-size: 25px;
+    padding: 15px;
+    cursor: pointer;
+    background-color: #35424a;
+    border: none;
+    border-radius: 5px;
+    color: white;
+}
+
+form.email.errors{
+    color: #35424a;
+    background-color: #0088cc;
+}
+
+/* Для настольных устройств

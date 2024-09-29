@@ -26,7 +26,7 @@
                         <li><a href="{% url 'report' %}">Отчеты</a></li>
                         <li><a href="{% url 'favourites' %}">Избранное</a></li>
                         {% if user.is_authenticated %}
-                            <li><a href="{% url 'profile' %}">Профиль</a></li>
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
                         {% else %}
                             <li><a href="{% url 'login' %}">Вход</a></li>
                         {% endif %}
@@ -34,14 +34,39 @@
                 </nav>
             </div>
         </header>
-        <section class="topic-content">
+        <section class="content">
+            <h2> {{ topic.title }} </h2>
             <p>{{ topic.content }}</p>
             <p><small>Автор: {{ topic.author.username }} | Дата: {{ topic.created_at|date:"d M Y" }}</small></p>
         </section>
-        <footer>
-            <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
-        </footer>
+
     </div>
+    <footer>
+        <h3>Информация:</h3>
+        <div class="footer-main">
+            <div id="footer-links" class="footer-links-1">
+                <a href="#">О проекте</a>
+                <a href="#">Помощь</a>
+                <a href="#">Политика конфиденциальности</a>
+            </div>
+            <div id="footer-links" class="footer-links-2">
+                <a href="#">Поддержка</a>
+                <a href="#">Реклама и интеграции</a>
+                <a href="#">Партнерство</a>
+            </div>
+            <div class="subscribe">
+                <span>Контакты:</span>
+                <a href="https://t.me/yourtelegram" class="social-icon telegram-icon">
+                    <i class='bx bxl-telegram'></i>
+                </a>
+                <a href="https://github.com/BaranovSerV" class="social-icon github-icon">
+                    <i class='bx bxl-github'></i>
+                </a>
+            </div>
+        </div>
+        <hr class="footer-line">
+        <p>&copy; 2024 Речной маршрут. Все права защищены.</p>
+    </footer>
 </body>
 
 </html>

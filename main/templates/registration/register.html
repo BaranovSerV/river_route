@@ -37,6 +37,18 @@
             <form id="registerForm" method="post">
                 {% csrf_token %}
                 {{ form.non_field_errors }}
+                <label for="id_first_name"  placeholder="Имя">Имя пользователя:</label>
+                <div class="input-box">
+                    {{ form.first_name.errors }}
+                    {{ form.first_name }}
+                    <i id="icon-form" class='bx bxs-user'></i>
+                </div>
+                <label for="id_last_name"  placeholder="Фамилия">Имя пользователя:</label>
+                <div class="input-box">
+                    {{ form.last_name.errors }}
+                    {{ form.last_name }}
+                    <i id="icon-form" class='bx bxs-user'></i>
+                </div>
                 <label for="id_username"  placeholder="username">Имя пользователя:</label>
                 <div class="input-box">
                     {{ form.username.errors }}

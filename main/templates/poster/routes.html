@@ -1,0 +1,148 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Маршруты</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" href="{% static 'images/avatar_curc.jpeg' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Подключение стилей OpenLayers -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v7.4.0/ol.css">
+</head>
+
+<body>
+    <div class="wrapper">
+        <header>
+            <div class="header-container">
+                <div class="logo-title">
+                    <a href="{% url 'index' %}">
+                        <img src="{% static 'images/avatar_curc.jpeg' %}" alt="Логотип сайта" class="logo">
+                    </a>
+                    <h1>Речной маршрут</h1>
+                </div>
+                <nav>
+                    <ul class="menu">
+                        <li><a href="{% url 'index' %}">Главная</a></li>
+                        <li><a href="{% url 'forum' %}">Форум</a></li>
+                        <li><a href="{% url 'report' %}">Отчеты</a></li>
+                        <li><a href="{% url 'favourites' %}">Избранное</a></li>
+                        {% if user.is_authenticated %}
+                            <li><a href="{% url 'profile' user.username %}">Профиль</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Вход</a></li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <div class="maps-content">
+            <section id="maps-section" class="content">
+                <h2>Маршруты</h2>
+                <form action="{% url 'add_routes' %}">
+                    <button type="submit" class="button">Добавить GPX-трекер</button>
+                </form>
+                <div class="button-container">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="button">Добавить GPX-трекер</button>
+                    </form>
+                </div>
+                <!-- Список загруженных треков -->
+                <ul id="track-list">
+                    {% for track in tracks %}
+                        <li id="track-post" class="report">
+                            <div class="track-sector">
+                                <label class="track-name" for="track-{{ track.id }}">{{ track.name }}</label>
+                                <input type="checkbox" id="track-{{ track.id }}" class="track-toggle" data-url="{{ track.file.url }}" checked>
+                            </div>
+                            <p>Длина: {{ track.distance|floatformat:2 }} км, Набор высоты: {{ track.elevation_gain|floatformat:2 }} м</p>
+                            
+                            <!-- Кнопка для удаления маршрута -->
+                            <form method="POST" action="{% url 'delete_route' track.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="delete-button">Удалить маршрут</button>
+                            </form>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </section>
+
+            <!-- Карта -->
+            <div id="map"></div>
+        </div>
+    </div>
+    <!-- Подключение JavaScript библиотеки OpenLayers -->
+    <script src="https://cdn.jsdelivr.net/npm/ol@v7.4.0/dist/ol.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Создание карты с помощью OpenLayers
+            const map = new ol.Map({
+                target: 'map',
+                layers: [
+                    new ol.layer.Tile({
+                        source: new ol.source.OSM()
+                    })
+                ],
+                view: new ol.View({
+                    center: ol.proj.fromLonLat([42.445137, 43.355060]), // Центр карты (Эльбрус)
+                    zoom: 10
+                })
+            });
+        
+            const trackLayers = {};
+        
+            // Массив цветов для треков
+            const trackColors = ['#FF5733', '#33FF57', '#3357FF', '#FF33B5', '#FFD433', '#33FFF1'];
+        
+            // Загрузка треков с сервера и добавление их на карту
+            document.querySelectorAll('.track-toggle').forEach(function(checkbox, index) {
+                const url = checkbox.dataset.url;
+                fetch(url)
+                    .then(response => response.text())
+                    .then(gpxData => {
+                        const format = new ol.format.GPX();
+                        const features = format.readFeatures(gpxData, {
+                            featureProjection: map.getView().getProjection()
+                        });
+        
+                        const vectorSource = new ol.source.Vector({
+                            features: features
+                        });
+        
+                        // Присваиваем цвет треку из массива цветов
+                        const color = trackColors[index % trackColors.length];
+        
+                        const vectorLayer = new ol.layer.Vector({
+                            source: vectorSource,
+                            style: new ol.style.Style({
+                                stroke: new ol.style.Stroke({
+                                    color: color, // Цвет трека
+                                    width: 4
+                                })
+                            })
+                        });
+        
+                        trackLayers[checkbox.id] = vectorLayer;
+                        map.addLayer(vectorLayer);
+                    });
+        
+                // Включение/выключение трека на карте
+                checkbox.addEventListener('change', function() {
+                    const layer = trackLayers[this.id];
+                    if (this.checked) {
+                        map.addLayer(layer);
+                    } else {
+                        map.removeLayer(layer);
+                    }
+                });
+            });
+        });        
+    </script>
+</body>
+
+</html>
